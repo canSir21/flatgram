@@ -18,27 +18,46 @@ const flatagramAPI = "http://localhost:3000/images/1"
 const cardImage = document.getElementById('card-image');
 const cardTitle = document.getElementById('card-title');
 const commentsList = document.getElementById('comments-list')
-
+const submitForm = document.getElementById('comment-form')
+const inputEl = document.getElementById('comment-input')
 const flataGramAPI = 'http://localhost:3000/images/1'
-
+console.log(inputEl, 'inputEl')
 fetch(flatagramAPI)
     .then((res) => res.json())
-    .then(displayFlataGram);
+    .then((data) => displayFlataGram(data));
+
 
 function displayFlataGram(data) {
     cardImage.src = data.image;
     cardTitle.textContent = data.title;
-
     displayComments(data.comments)
 }
 
 function displayComments(comments) {
     commentsList.innerHTML = "";
-    comments.forEach(displayComment)
+    comments.map(comment => displayComment(comment))
 }
 
 function displayComment(comment) {
-    const newComment = document.createElement('li');
-    newComment.textContent = comment.content;
-    commentsList.append(newComment);
+    const newLi = document.createElement('li')
+    const text = document.createTextNode(comment.content)
+    commentsList.appendChild(newLi).appendChild(text);
+    // const newCommentEl= document.createElement('li');
+    //const newComment=  newCommentEl.appendChild(document.createTextNode(comment.content))
+    // commentsList.appendChild(newComment);
 }
+
+function addNewComment() {
+    submitForm.addEventListener('submit', addComment)
+}
+
+function addComment(event) {
+    event.preventDefault();
+    const newPostedComment = inputEl.value;
+
+    displayComment({ content: newPostedComment });
+    event.target.reset()
+
+}
+
+addNewComment()
